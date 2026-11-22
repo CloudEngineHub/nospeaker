@@ -43,8 +43,8 @@ to [play.sh](play.sh) in this repo, so you can read what it runs first.
 
 `[ download ]`
 
-Get `nospeaker.zip` from the [latest release](https://github.com/os6/nospeaker/releases/latest),
-open it, and double-click `nospeaker`. Signed with a Developer ID and notarized by Apple.
+Grab `nospeaker.zip` from the [latest release](https://github.com/os6/nospeaker/releases/latest),
+unzip it and run `./nospeaker` in Terminal. Signed with a Developer ID and notarized by Apple.
 
 `[ from source ]`
 
