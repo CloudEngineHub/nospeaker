@@ -7,7 +7,7 @@
 //   nospeaker                      the show: about a minute and a half, in the terminal
 //   nospeaker "any words"          say something
 //   nospeaker --sweep              a rising tone from 100 Hz to 4 kHz
-//   options                        --voice <name> (any voice from `say -v '?'`), --dark, --plain
+//   options                        --voice <name> (any voice from `say -v '?'`), --dark, --plain, --external
 //
 // How it talks: macOS's own voice (`say`) speaks the line into memory. Every 10 ms, linear prediction finds
 // the voice's two strongest resonances (formants), its loudness and its pitch. The motor plays those two
@@ -103,6 +103,8 @@ var deviceCount = 0
 var motorDeviceID: UInt64 = 0
 var motorBuiltIn = false
 var deviceList: CFArray?
+/// --external: play through an external Magic Trackpad instead of the built-in trackpad.
+var preferExternal = false
 
 /// The Mac's model identifier, like "MacBookPro18,3" or "Mac14,3".
 func macModel() -> String {
@@ -147,6 +149,20 @@ func openMotor() -> CFTypeRef {
         if getID(dev, &id) == 0 { ids.append((id, isBuiltIn?(dev) ?? false)) }
     }
     deviceCount = ids.count
+    // --external: play only through an external trackpad (a Magic Trackpad), never the built-in one.
+    if preferExternal {
+        for d in ids where !d.builtIn {
+            if let ref = actuatorCreate(d.id)?.takeRetainedValue(), actuatorOpen(ref) == 0 {
+                motorDeviceID = d.id
+                motorBuiltIn = d.builtIn
+                return ref
+            }
+        }
+        fail("""
+        --external was given, but no external trackpad was found.
+        Turn on your Magic Trackpad (2 or newer, the ones with Force Touch), connect it, and run it again.
+        """)
+    }
     for d in ids.sorted(by: { $0.builtIn && !$1.builtIn }) {
         if let ref = actuatorCreate(d.id)?.takeRetainedValue(), actuatorOpen(ref) == 0 {
             motorDeviceID = d.id
@@ -1047,7 +1063,7 @@ func drawSplash(_ cv: Canvas, _ s: LiveState, _ t: Double) {
         cv.text(x + 2, y, d, midC); cv.text(x + 2 + d.count, y, value, inkC, bold: true)
     }
     if done >= 1 { line(12, "loading the trackpad's haptics", mt != nil ? "ok" : "missing") }
-    if done >= 2 { line(13, motorBuiltIn ? "connecting to the built-in trackpad" : "connecting to the trackpad", "ready") }
+    if done >= 2 { line(13, preferExternal ? "connecting to the external trackpad" : motorBuiltIn ? "connecting to the built-in trackpad" : "connecting to the trackpad", "ready") }
     if done >= 2 {
         let total = max(1, s.stepTotal - 2), voices = max(0, min(total, done - 2))
         if voices < total {
@@ -1536,6 +1552,7 @@ if flag("--help") || flag("-h") {
       --voice Daniel                    any voice from `say -v '?'`
       --dark                            white on black instead of black on white
       --plain                           no visuals
+      --external                        play through an external Magic Trackpad
 
     Mute your Mac: it still talks. Put it on a table, and keep your hands off the trackpad until it asks.
     a90.com · x.com/codycollier
@@ -1550,6 +1567,7 @@ if let v = voiceName, !voiceExists(v) {
 applyTheme(light: !flag("--dark"))
 let plain = flag("--plain")
 let wantsSweep = flag("--sweep")
+preferExternal = flag("--external")
 if let unknown = args.first(where: { $0.hasPrefix("-") }) { usageError("\"\(unknown)\" isn't an option.") }
 
 signal(SIGINT) { _ in requestEnd() }
