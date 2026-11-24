@@ -18,7 +18,7 @@ into a voice. It talks, sings, raps, and becomes an instrument under your finger
 
 One command. About a minute and a half. No speakers used.
 
-<!-- demo video: drag an .mp4 here in GitHub's editor -->
+[Watch the demo on X](https://x.com/codycollier/status/2124505859883716918), with the sound on.
 
 ## 01 / before you start
 
@@ -77,10 +77,11 @@ later on Apple Silicon, or macOS 13 or later on Intel. Without a Force Touch tra
 ```text
 tested on
 
-MacBook Pro (Mac17,10)   M5 Max   macOS 27.2.1   everything works
+MacBook Pro (Mac17,10)         M5 Max   macOS 27.2.1   everything works
+MacBook Pro (MacBookPro15,1)   Intel    macOS 15.7.4   works, built from source
 ```
 
-Not tested yet: Intel Macs, a Magic Trackpad, and older versions of macOS. MultitouchSupport is private, so
+Not tested yet: a Magic Trackpad, and versions of macOS older than 15. MultitouchSupport is private, so
 older systems may lack the functions it uses, and loudness differs between trackpads. If you try it on another
 Mac, open an issue with your model, your macOS version and how it sounded.
 
