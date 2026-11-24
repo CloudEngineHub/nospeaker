@@ -35,7 +35,7 @@ echo "building for Apple Silicon…"
 swiftc -O -target arm64-apple-macos12 nospeaker.swift -o build/nospeaker-arm64 \
     || fail "the Apple Silicon build failed (errors above). Make sure Xcode or the Command Line Tools are up to date."
 echo "building for Intel…"
-swiftc -O -target x86_64-apple-macos13 nospeaker.swift -o build/nospeaker-x86_64 \
+swiftc -O -target x86_64-apple-macos12 nospeaker.swift -o build/nospeaker-x86_64 \
     || fail "the Intel build failed (errors above). Make sure Xcode or the Command Line Tools are up to date."
 
 lipo -create build/nospeaker-arm64 build/nospeaker-x86_64 -output build/nospeaker

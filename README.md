@@ -73,7 +73,7 @@ cd nospeaker
 ## 04 / needs
 
 A Force Touch trackpad (built into MacBooks from 2015 on, or a Magic Trackpad 2 or newer), and macOS 12 or
-later on Apple Silicon, or macOS 13 or later on Intel. Without a Force Touch trackpad, it says so and exits.
+later. Without a Force Touch trackpad, it says so and exits.
 
 ```text
 tested on
