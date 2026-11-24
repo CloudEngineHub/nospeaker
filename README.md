@@ -49,7 +49,7 @@ unzip it and run `./nospeaker` in Terminal. Signed with a Developer ID and notar
 `[ from source ]`
 
 Needs Xcode or the Command Line Tools (`xcode-select --install`). Builds one program for Apple Silicon
-and Intel Macs.
+and Intel Macs. Built with only the Command Line Tools, the Intel part needs macOS 13 or later.
 
 ```sh
 git clone https://github.com/os6/nospeaker

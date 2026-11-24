@@ -35,8 +35,18 @@ echo "building for Apple Silicon…"
 swiftc -O -target arm64-apple-macos12 nospeaker.swift -o build/nospeaker-arm64 \
     || fail "the Apple Silicon build failed (errors above). Make sure Xcode or the Command Line Tools are up to date."
 echo "building for Intel…"
-swiftc -O -target x86_64-apple-macos12 nospeaker.swift -o build/nospeaker-x86_64 \
-    || fail "the Intel build failed (errors above). Make sure Xcode or the Command Line Tools are up to date."
+# macOS 12 on Intel links Swift libraries that only full Xcode has for Intel. With only the Command Line
+# Tools, build for macOS 13 instead, but never for a release, which has to run on macOS 12.
+if ! swiftc -O -target x86_64-apple-macos12 nospeaker.swift -o build/nospeaker-x86_64 2>/dev/null; then
+    [ "$mode" = "release" ] && fail "a release needs the Intel build for macOS 12, which needs full Xcode. Switch to it:
+
+    sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+
+  then run ./build.sh release again."
+    echo "  (Intel for macOS 12 needs full Xcode, so this build is for macOS 13 and later)"
+    swiftc -O -target x86_64-apple-macos13 nospeaker.swift -o build/nospeaker-x86_64 \
+        || fail "the Intel build failed (errors above). Make sure Xcode or the Command Line Tools are up to date."
+fi
 
 lipo -create build/nospeaker-arm64 build/nospeaker-x86_64 -output build/nospeaker
 codesign -s - -f build/nospeaker 2>/dev/null
