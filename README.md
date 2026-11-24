@@ -66,8 +66,8 @@ cd nospeaker
 ./nospeaker --sweep                  a rising tone, 100 Hz to 4 kHz
 
 --dark                               white on black
---plain                              no visuals
---external                           play through an external Magic Trackpad, plain text
+--plain                              no visuals, plain text
+--external                           play through an external Magic Trackpad
 ```
 
 ## 04 / needs
